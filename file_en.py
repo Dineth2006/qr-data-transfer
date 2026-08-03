@@ -10,15 +10,6 @@ def file_encode(inputFile):
         return out
 
 def file_decode(encodedString,outputFileDir="."):
-    # l = encodedString.split("|")
-    # fileName = l[0]
-    # encoded = l[1]
-    # encoded = encoded.strip()
-    # data = bytes.fromhex(encoded)
-    # with open(f"{outputFileDir}{os.sep}{fileName}", "wb") as f:
-    #     f.write(data)
-
-
     try:
         l = encodedString.split("|")
         fileName = l[0]
