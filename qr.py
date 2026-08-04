@@ -70,7 +70,7 @@ def generate_video(path, name, fps=30):
     height, width, layers = frame.shape
 
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    video = cv2.VideoWriter(f"./{name}/{name}.avi", fourcc, 30, (width, height))
+    video = cv2.VideoWriter(f"./{name}/{name}.avi", fourcc, fps, (width, height))
 
     for image in images:
         video.write(cv2.imread(os.path.join(path, image)))
