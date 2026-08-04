@@ -3,10 +3,9 @@ import re
 
 def file_encode(inputFile):
     with open(inputFile, "rb") as f:
-        path = inputFile.split(os.sep)[-1]
         data = f.read()
         encoded = data.hex()
-        out = f"{path}|{encoded}"
+        out = f"{encoded}"
         return out
 
 def file_decode(encodedString,outputFileDir="."):
@@ -25,3 +24,15 @@ def file_decode(encodedString,outputFileDir="."):
 
     except Exception as e:
         print(f"Error decoding file: {e}")
+
+def code_split(encodedString,name):
+    x = ""
+    for i, ch in enumerate(encodedString, start=1):
+        x += ch
+        if i % 2900 == 0:
+            with open(f"./{name}/{name}.txt", "a+") as f:
+                f.write(x + "\n")
+            x = ""
+    if x:
+        with open(f"./{name}/{name}.txt", "a+") as f:
+            f.write(x + "\n")
