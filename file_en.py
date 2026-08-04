@@ -8,6 +8,19 @@ def file_encode(inputFile):
         out = f"{encoded}"
         return out
 
+def data_gather(data):
+    index,filename,rawData = data.split("|")
+    folder = filename.split(".")[0]
+    with open(f"./wtever/TMP/{filename}.txt", "a+") as f:
+        with open(f"./wtever/TMP/{filename}.txt", "r") as rf:
+            for line in rf:
+                if line.startswith(f"{index}|"):
+                    print(f"Duplication found, {index}")
+                    return
+            else:
+                f.write(f"{index}|{rawData}\n")
+
+            
 def file_decode(encodedString,outputFileDir="."):
     try:
         l = encodedString.split("|")

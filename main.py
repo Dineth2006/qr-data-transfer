@@ -1,5 +1,6 @@
 import sys
 import os
+import cv2
 import file_en
 import qr
 
@@ -10,7 +11,7 @@ if len(sys.argv) < 2 or len(sys.argv) > 3:
 def main():
     inputFile = sys.argv[1]
     outputFileDir = sys.argv[2] if len(sys.argv) > 2 else "."
-    mode = sys.argv[3] if len(sys.argv) > 3 else "encode" 
+    mode = sys.argv[3] if len(sys.argv) > 3 else "decode" 
 
     if mode == "encode":
         path = inputFile.split(os.sep)[-1]
@@ -21,11 +22,16 @@ def main():
         file_en.code_split(encoded,name)
         print(f"Successfully encoded {inputFile} to {name}.txt")
         qr.repeat_qr(name,path)
-
+        qr.generate_video(f"./{name}/QR", name)
         
 
     elif mode == "decode":
-        file_en.file_decode(inputFile, outputFileDir)
+        if not os.path.exists(f"./{outputFileDir}"):
+            os.mkdir(f"./{outputFileDir}")
+        if not os.path.exists(f"./{outputFileDir}/TMP"):
+            os.mkdir(f"./{outputFileDir}/TMP")
+        qr.scan_qr_stream()
+    
     else:
         raise ValueError("Invalid mode. Use 'encode' or 'decode'.")
 
