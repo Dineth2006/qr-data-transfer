@@ -1,11 +1,10 @@
 import sys
 import os
-import cv2
 import file_en
 import qr
 
-if len(sys.argv) < 2 or len(sys.argv) > 3:
-    raise ValueError("Usage: python main.py <input_file> [output_directory]")
+if len(sys.argv) < 2 or len(sys.argv) > 4:
+    raise ValueError("Usage: python main.py <input_file> [output_directory] [method]")
 
 
 def main():
@@ -17,20 +16,23 @@ def main():
         path = inputFile.split(os.sep)[-1]
         name = path.split(".")[0]
         encoded = file_en.file_encode(inputFile)
-        os.mkdir(f"./{name}")
-        os.mkdir(f"./{name}/QR")
+        os.mkdir(f"./Encode")
+        os.mkdir(f"./Encode/{name}")
+        os.mkdir(f"./Encode/{name}/QR")
         file_en.code_split(encoded,name)
         print(f"Successfully encoded {inputFile} to {name}.txt")
         qr.repeat_qr(name,path)
-        qr.generate_video(f"./{name}/QR", name)
+        qr.generate_video(f"./Encode/{name}/QR", name)
         
 
     elif mode == "decode":
-        if not os.path.exists(f"./{outputFileDir}"):
-            os.mkdir(f"./{outputFileDir}")
-        if not os.path.exists(f"./{outputFileDir}/TMP"):
-            os.mkdir(f"./{outputFileDir}/TMP")
-        qr.scan_qr_stream()
+        if not os.path.exists(f"./Decoded"):
+            os.mkdir(f"./Decoded")
+        if not os.path.exists(f"./Decoded/{outputFileDir}"):
+            os.mkdir(f"./Decoded/{outputFileDir}")
+        if not os.path.exists(f"./Decoded/{outputFileDir}/TMP"):
+            os.mkdir(f"./Decoded/{outputFileDir}/TMP")
+        qr.scan_qr_stream(outputFileDir)
     
     else:
         raise ValueError("Invalid mode. Use 'encode' or 'decode'.")

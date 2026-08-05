@@ -17,7 +17,7 @@ def repeat(capture):
     capture.release()
     cv2.destroyAllWindows()
 
-def scan_qr_stream(source=1):
+def scan_qr_stream(outputFileDir,source=1):
     capture = cv2.VideoCapture(source)
     while True:
         ret, frame = capture.read()
@@ -27,8 +27,14 @@ def scan_qr_stream(source=1):
         decoded_objects = decode(frame)
         for obj in decoded_objects:
             print("QR detected")
-            file_en.data_gather(obj.data.decode("utf-8"))
+            count,total_codes,fileName = file_en.data_gather(obj.data.decode("utf-8"), outputFileDir)
+            if count == total_codes:
+                print("All QR codes received. Decoding...")
+                file_en.decode_pass(total_codes,outputFileDir)
+                print("Decoding complete.")
+                break
 
+        file_en.file_decode(fileName,outputFileDir)
 
         cv2.imshow("QR Scanner", frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -60,7 +66,7 @@ def repeat_qr(name,path):
             generate_qr_code(line.strip(), index, name, path, TotalCodes)
             print(f"Generated QR code for line {index + 1}")
 
-def generate_video(path, name, fps=30):
+def generate_video(path, name, fps=5):
     print(f"Generating video from {path}...")
 
     images = [img for img in os.listdir(path) if img.endswith(".png")]
